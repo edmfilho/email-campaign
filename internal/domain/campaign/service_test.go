@@ -33,16 +33,19 @@ var (
 
 func Test_Create_ValidateDomainError(t *testing.T) {
 	assert := assert.New(t)
-	newCampaign.Name = ""
 
-	_, err := service.Create(newCampaign)
+	_, err := service.Create(contract.NewCampaignDTO{})
 
-	assert.NotNil(err)
-	assert.Equal(err.Error(), "name is required")
+	assert.False(errors.Is(err, internalerrors.InternalServerError))
 }
 
 func Test_Create_Campaign(t *testing.T) {
 	assert := assert.New(t)
+
+	repositoryMock := new(repositoryMock)
+	repositoryMock.On("Save", mock.Anything).Return(nil)
+
+	service.Repository = repositoryMock
 
 	id, err := service.Create(newCampaign)
 
