@@ -1,11 +1,11 @@
+POST http://localhost:3000/campaigns
 
-GET http://localhost:3000/json
+{
+    "name": "EDINHO",
+	"content": "Outro conteudo",
+	"emails": ["email@teste.com.br"]
+}
 
 ###
 
-POST http://localhost:3000/product
-
-{
-    "name" : "teste",
-    "valor": "1824"
-}
+GET http://localhost:3000/campaigns

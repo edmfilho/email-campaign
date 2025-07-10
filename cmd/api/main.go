@@ -1,10 +1,14 @@
 package main
 
 import (
+	"campaign-project/internal/domain/campaign"
+	"campaign-project/internal/endpoints"
+	"campaign-project/internal/infra/database"
+
 	"net/http"
 
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
@@ -15,6 +19,17 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	campaignService := campaign.Service{
+		Repository: &database.CampaignRepository{},
+	}
+
+	handler := endpoints.Handler{
+		CampaignService: campaignService,
+	}
+
+	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignPost))
+	r.Get("/campaigns", endpoints.HandlerError(handler.CampaignGet))
+	r.Get("/campaign", endpoints.HandlerError(handler.CampaignGetByID))
 
 	println("Iniciando Server...")
 	http.ListenAndServe(":3000", r)
