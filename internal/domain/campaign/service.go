@@ -24,3 +24,18 @@ func (s *Service) Create(newCampaign contract.NewCampaignDTO) (string, error) {
 
 	return campaign.ID, nil
 }
+
+func (s *Service) FindBy(id string) (*contract.CampaignResponse, error) {
+	campaign, err := s.Repository.GetByID(id)
+
+	if err != nil {
+		return nil, internalerrors.InternalServerError
+	}
+
+	return &contract.CampaignResponse{
+		ID:      campaign.ID,
+		Status:  campaign.Status,
+		Name:    campaign.Name,
+		Content: campaign.Content,
+	}, nil
+}

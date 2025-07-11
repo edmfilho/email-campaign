@@ -25,5 +25,5 @@ func (c *CampaignRepository) GetByID(id string) (campaign.Campaign, error) {
 		}
 	}
 
-	return campaign.Campaign{}, fmt.Errorf("campaign with id %s not founded", id)
+	return campaign.Campaign{}, fmt.Errorf("campaign with id %s was not found", id)
 }
