@@ -19,8 +19,8 @@ func (r *repositoryMock) Save(campaign *Campaign) error {
 	return args.Error(0)
 }
 
-func (r *repositoryMock) Get() []Campaign {
-	return nil
+func (r *repositoryMock) Get() ([]Campaign, error) {
+	return nil, nil
 }
 
 func (r *repositoryMock) GetByID(id string) (*Campaign, error) {
@@ -103,8 +103,6 @@ func Test_GetById_ReturnCampaign(t *testing.T) {
 	campaign, _ := NewCampaign(newCampaign.Name, newCampaign.Content, newCampaign.Emails)
 
 	repositoryMock := new(repositoryMock)
-	repositoryMock.On("GetByID", mock.Anything).Return(campaign, nil)
-
 	repositoryMock.On("GetByID", mock.MatchedBy(func(id string) bool {
 		return id == campaign.ID
 	})).Return(campaign, nil)

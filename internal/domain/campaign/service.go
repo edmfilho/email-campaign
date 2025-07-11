@@ -25,6 +25,27 @@ func (s *Service) Create(newCampaign contract.NewCampaignDTO) (string, error) {
 	return campaign.ID, nil
 }
 
+func (s *Service) FindAll() ([]contract.CampaignResponse, error) {
+	campaigns, err := s.Repository.Get()
+
+	if err != nil {
+		return nil, internalerrors.InternalServerError
+	}
+	
+	var response []contract.CampaignResponse
+
+	for _, v := range campaigns {
+		response = append(response, contract.CampaignResponse{
+			ID:      v.ID,
+			Name:    v.Name,
+			Content: v.Content,
+			Status:  v.Status,
+		})
+	}
+
+	return response, nil
+}
+
 func (s *Service) FindBy(id string) (*contract.CampaignResponse, error) {
 	campaign, err := s.Repository.GetByID(id)
 
