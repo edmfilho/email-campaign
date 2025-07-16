@@ -1,11 +1,13 @@
 POST http://localhost:3000/campaigns
 
 {
-    "name": "EDINHO",
-	"content": "Outro conteudo",
-	"emails": ["email@teste.com.br"]
+    "name": "Fulano da silva",
+	"content": "Conteudo muito importante",
+	"emails": ["email@teste.com.br", "outro@gmail.com"]
 }
 
 ###
-
 GET http://localhost:3000/campaigns
+
+###
+GET http://localhost:3000/campaign/d1rvhi1b6d8tt4eabhgg
