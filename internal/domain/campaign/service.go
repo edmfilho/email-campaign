@@ -63,28 +63,6 @@ func (s *Service) FindBy(id string) (*contract.CampaignResponse, error) {
 	}, nil
 }
 
-func (s *Service) Cancel(id string) error {
-	campaign, err := s.Repository.GetByID(id)
-
-	if err != nil {
-		return internalerrors.ProcessError(err)
-	}
-
-	if campaign.Status != Pending {
-		return errors.New("invalid campaign status")
-	}
-
-	campaign.Cancel()
-
-	err = s.Repository.Update(campaign)
-
-	if err != nil {
-		return internalerrors.ErrInternalServerError
-	}
-
-	return nil
-}
-
 func (s *Service) Delete(id string) error {
 	campaign, err := s.Repository.GetByID(id)
 

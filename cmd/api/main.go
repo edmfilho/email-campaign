@@ -30,8 +30,7 @@ func main() {
 	}
 
 	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignPost))
-	r.Get("/campaign/{id}", endpoints.HandlerError(handler.CampaignGetByID))
-	r.Patch("/campaign/cancel/{id}", endpoints.HandlerError(handler.CampaignCancelPatch))
+	r.Get("/campaign/{id}", endpoints.HandlerError(handler.CampaignGetByID))	
 	r.Get("/campaigns", endpoints.HandlerError(handler.CampaignGet))
 	r.Delete("/campaign/{id}", endpoints.HandlerError(handler.CampaignDelete))
 
