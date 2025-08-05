@@ -67,7 +67,7 @@ func (s *Service) Cancel(id string) error {
 	campaign, err := s.Repository.GetByID(id)
 
 	if err != nil {
-		return internalerrors.ErrInternalServerError
+		return internalerrors.ProcessError(err)
 	}
 
 	if campaign.Status != Pending {
@@ -89,7 +89,7 @@ func (s *Service) Delete(id string) error {
 	campaign, err := s.Repository.GetByID(id)
 
 	if err != nil {
-		return internalerrors.ErrInternalServerError
+		return internalerrors.ProcessError(err)
 	}
 
 	if campaign.Status != Pending {

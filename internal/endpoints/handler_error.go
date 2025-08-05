@@ -4,9 +4,9 @@ import (
 	internalerrors "campaign-project/internal/internalErrors"
 	"errors"
 	"net/http"
-	"slices"
 
 	"github.com/go-chi/render"
+	"gorm.io/gorm"
 )
 
 type EndpointFunc func(w http.ResponseWriter, r *http.Request) (any, int, error)
@@ -17,19 +17,14 @@ func HandlerError(endpointfunc EndpointFunc) http.HandlerFunc {
 
 		if err != nil {
 			if errors.Is(err, internalerrors.ErrInternalServerError) {
-				render.Status(r, 500)
+				render.Status(r, http.StatusInternalServerError)
+			} else if errors.Is(err, gorm.ErrRecordNotFound) {
+				render.Status(r, http.StatusNotFound)
 			} else {
-				render.Status(r, 400)
+				render.Status(r, http.StatusBadRequest)
 			}
 
 			render.JSON(w, r, map[string]string{"error": err.Error()})
-			return
-		}
-
-		if !slices.Contains([]int{200, 201, 202}, status) {
-			render.Status(r, status)
-
-			render.JSON(w, r, map[string]string{"error": "resource not found"})
 			return
 		}
 
