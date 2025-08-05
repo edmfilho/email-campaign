@@ -17,7 +17,7 @@ func (s *Service) Create(newCampaign contract.NewCampaignDTO) (string, error) {
 		return "", err
 	}
 
-	err = s.Repository.Save(campaign)
+	err = s.Repository.Create(campaign)
 
 	if err != nil {
 		return "", internalerrors.InternalServerError
@@ -59,6 +59,7 @@ func (s *Service) FindBy(id string) (*contract.CampaignResponse, error) {
 		Status:  campaign.Status,
 		Name:    campaign.Name,
 		Content: campaign.Content,
+		AmountContacts: len(campaign.Contacts),
 	}, nil
 }
 
@@ -75,7 +76,29 @@ func (s *Service) Cancel(id string) error {
 
 	campaign.Cancel()
 
-	err = s.Repository.Save(campaign)
+	err = s.Repository.Update(campaign)
+
+	if err != nil {
+		return internalerrors.InternalServerError
+	}
+
+	return nil
+}
+
+func (s *Service) Delete(id string) error {
+	campaign, err := s.Repository.GetByID(id)
+
+	if err != nil {
+		return internalerrors.InternalServerError
+	}
+
+	if campaign.Status != Pending {
+		return errors.New("invalid campaign status")
+	}
+
+	campaign.Delete()
+
+	err = s.Repository.Delete(campaign)
 
 	if err != nil {
 		return internalerrors.InternalServerError

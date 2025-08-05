@@ -12,6 +12,7 @@ const (
 	Started  string = "Started"
 	Done     string = "Done"
 	Canceled string = "Canceled"
+	Deleted  string = "Deleted"
 )
 
 type Contact struct {
@@ -27,6 +28,10 @@ type Campaign struct {
 	CreatedOn time.Time `validate:"required"`
 	Content   string    `validate:"min=5,max=1024" gorm:"size:1024"`
 	Contacts  []Contact `validate:"min=1,dive"`
+}
+
+func (c *Campaign) Delete() {
+	c.Status = Deleted
 }
 
 func (c *Campaign) Cancel() {

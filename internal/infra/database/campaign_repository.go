@@ -10,7 +10,12 @@ type CampaignRepository struct {
 	Db *gorm.DB
 }
 
-func (c *CampaignRepository) Save(campaign *campaign.Campaign) error {
+func (c *CampaignRepository) Create(campaign *campaign.Campaign) error {
+	tx := c.Db.Create(campaign)
+	return tx.Error
+}
+
+func (c *CampaignRepository) Update(campaign *campaign.Campaign) error {
 	tx := c.Db.Save(campaign)
 	return tx.Error
 }
@@ -26,4 +31,9 @@ func (c *CampaignRepository) GetByID(id string) (*campaign.Campaign, error) {
 	var campaign campaign.Campaign
 	tx := c.Db.First(&campaign, "id = ?", id)
 	return &campaign, tx.Error
+}
+
+func (c *CampaignRepository) Delete(campaign *campaign.Campaign) error {
+	tx := c.Db.Delete(campaign)
+	return tx.Error
 }
