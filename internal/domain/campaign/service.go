@@ -20,7 +20,7 @@ func (s *Service) Create(newCampaign contract.NewCampaignDTO) (string, error) {
 	err = s.Repository.Create(campaign)
 
 	if err != nil {
-		return "", internalerrors.InternalServerError
+		return "", internalerrors.ErrInternalServerError
 	}
 
 	return campaign.ID, nil
@@ -30,7 +30,7 @@ func (s *Service) FindAll() ([]contract.CampaignResponse, error) {
 	campaigns, err := s.Repository.Get()
 
 	if err != nil {
-		return nil, internalerrors.InternalServerError
+		return nil, internalerrors.ErrInternalServerError
 	}
 
 	var response []contract.CampaignResponse
@@ -51,14 +51,14 @@ func (s *Service) FindBy(id string) (*contract.CampaignResponse, error) {
 	campaign, err := s.Repository.GetByID(id)
 
 	if err != nil {
-		return nil, internalerrors.InternalServerError
+		return nil, internalerrors.ProcessError(err)
 	}
 
 	return &contract.CampaignResponse{
-		ID:      campaign.ID,
-		Status:  campaign.Status,
-		Name:    campaign.Name,
-		Content: campaign.Content,
+		ID:             campaign.ID,
+		Status:         campaign.Status,
+		Name:           campaign.Name,
+		Content:        campaign.Content,
 		AmountContacts: len(campaign.Contacts),
 	}, nil
 }
@@ -67,7 +67,7 @@ func (s *Service) Cancel(id string) error {
 	campaign, err := s.Repository.GetByID(id)
 
 	if err != nil {
-		return internalerrors.InternalServerError
+		return internalerrors.ErrInternalServerError
 	}
 
 	if campaign.Status != Pending {
@@ -79,7 +79,7 @@ func (s *Service) Cancel(id string) error {
 	err = s.Repository.Update(campaign)
 
 	if err != nil {
-		return internalerrors.InternalServerError
+		return internalerrors.ErrInternalServerError
 	}
 
 	return nil
@@ -89,7 +89,7 @@ func (s *Service) Delete(id string) error {
 	campaign, err := s.Repository.GetByID(id)
 
 	if err != nil {
-		return internalerrors.InternalServerError
+		return internalerrors.ErrInternalServerError
 	}
 
 	if campaign.Status != Pending {
@@ -101,7 +101,7 @@ func (s *Service) Delete(id string) error {
 	err = s.Repository.Delete(campaign)
 
 	if err != nil {
-		return internalerrors.InternalServerError
+		return internalerrors.ErrInternalServerError
 	}
 
 	return nil

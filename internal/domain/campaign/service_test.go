@@ -59,7 +59,7 @@ func Test_Create_ValidateDomainError(t *testing.T) {
 
 	_, err := service.Create(contract.NewCampaignDTO{})
 
-	assert.False(errors.Is(err, internalerrors.InternalServerError))
+	assert.False(errors.Is(err, internalerrors.ErrInternalServerError))
 }
 
 func Test_Create_Campaign(t *testing.T) {
@@ -104,7 +104,7 @@ func Test_Create_ValidateRepositorySave(t *testing.T) {
 
 	_, err := service.Create(newCampaign)
 
-	assert.True(errors.Is(err, internalerrors.InternalServerError))
+	assert.True(errors.Is(err, internalerrors.ErrInternalServerError))
 }
 
 func Test_GetById_ReturnCampaign(t *testing.T) {
@@ -138,5 +138,5 @@ func Test_GetById_ReturnError(t *testing.T) {
 
 	_, err := service.FindBy(campaign.ID)
 
-	assert.Equal(internalerrors.InternalServerError.Error(), err.Error())
+	assert.Equal(internalerrors.ErrInternalServerError.Error(), err.Error())
 }

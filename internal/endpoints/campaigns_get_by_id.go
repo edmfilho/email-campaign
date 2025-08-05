@@ -11,5 +11,9 @@ func (h *Handler) CampaignGetByID(w http.ResponseWriter, r *http.Request) (any, 
 
 	campaign, err := h.CampaignService.FindBy(id)
 
+	if err == nil && campaign == nil {
+		return nil, http.StatusNotFound, err
+	}
+
 	return campaign, 200, err
 }

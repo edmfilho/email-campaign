@@ -1,8 +1,9 @@
+
 POST http://localhost:3000/campaigns
 
 {
-    "name": "JOVIIIII",
-	"content": "Conteudo muito importante",
+    "name": "Teste",
+	"content": "Que isdoasokdakljnlaQue isdoasokdakljnlaQue isdoasokdakljnla",
 	"emails": ["email@teste.com.br", "outro@gmail.com", "ddklas@dlsaa.com"]
 }
 
@@ -10,7 +11,7 @@ POST http://localhost:3000/campaigns
 GET http://localhost:3000/campaigns
 
 ###
-GET http://localhost:3000/campaign/d290q8pb6d8ol7vn3of0
+GET http://localhost:3000/campaign/d1rvgo1b6d8tt4eabhf0
 
 ###
 PATCH http://localhost:3000/campaign/cancel/d290q8pb6d8ol7vn3of0

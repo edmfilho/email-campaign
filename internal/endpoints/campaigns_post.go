@@ -16,8 +16,8 @@ func (h *Handler) CampaignPost(w http.ResponseWriter, r *http.Request) (any, int
 	id, err := h.CampaignService.Create(request)
 
 	if err != nil {
-		if errors.Is(err, internalerrors.InternalServerError) {
-			return nil, 500, internalerrors.InternalServerError
+		if errors.Is(err, internalerrors.ErrInternalServerError) {
+			return nil, 500, internalerrors.ErrInternalServerError
 		} else {
 			return nil, 400, err
 		}
