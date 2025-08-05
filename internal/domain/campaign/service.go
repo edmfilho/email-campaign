@@ -3,6 +3,7 @@ package campaign
 import (
 	"campaign-project/internal/contract"
 	internalerrors "campaign-project/internal/internalErrors"
+	"errors"
 )
 
 type Service struct {
@@ -31,7 +32,7 @@ func (s *Service) FindAll() ([]contract.CampaignResponse, error) {
 	if err != nil {
 		return nil, internalerrors.InternalServerError
 	}
-	
+
 	var response []contract.CampaignResponse
 
 	for _, v := range campaigns {
@@ -59,4 +60,26 @@ func (s *Service) FindBy(id string) (*contract.CampaignResponse, error) {
 		Name:    campaign.Name,
 		Content: campaign.Content,
 	}, nil
+}
+
+func (s *Service) Cancel(id string) error {
+	campaign, err := s.Repository.GetByID(id)
+
+	if err != nil {
+		return internalerrors.InternalServerError
+	}
+
+	if campaign.Status != Pending {
+		return errors.New("invalid campaign status")
+	}
+
+	campaign.Cancel()
+
+	err = s.Repository.Save(campaign)
+
+	if err != nil {
+		return internalerrors.InternalServerError
+	}
+
+	return nil
 }

@@ -1,9 +1,9 @@
 POST http://localhost:3000/campaigns
 
 {
-    "name": "Fulano da silva",
+    "name": "JOVIIIII",
 	"content": "Conteudo muito importante",
-	"emails": ["email@teste.com.br", "outro@gmail.com"]
+	"emails": ["email@teste.com.br", "outro@gmail.com", "ddklas@dlsaa.com"]
 }
 
 ###
@@ -11,3 +11,6 @@ GET http://localhost:3000/campaigns
 
 ###
 GET http://localhost:3000/campaign/d1rvhi1b6d8tt4eabhgg
+
+###
+PATCH http://localhost:3000/campaign/cancel/d1rvhi1b6d8tt4eabhgg
