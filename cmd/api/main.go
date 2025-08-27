@@ -17,20 +17,22 @@ func main() {
 
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	
+	r.Use(endpoints.Auth)
+
 	db := database.NewDB()
 	campaignService := campaign.Service{
 		Repository: &database.CampaignRepository{Db: db},
 	}
-	
+
 	r.Use(middleware.Logger)
 	handler := endpoints.Handler{
 		CampaignService: campaignService,
 	}
 
 	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignPost))
-	r.Get("/campaign/{id}", endpoints.HandlerError(handler.CampaignGetByID))	
+	r.Get("/campaign/{id}", endpoints.HandlerError(handler.CampaignGetByID))
 	r.Get("/campaigns", endpoints.HandlerError(handler.CampaignGet))
 	r.Delete("/campaign/{id}", endpoints.HandlerError(handler.CampaignDelete))
 
