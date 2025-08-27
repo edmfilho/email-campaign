@@ -4,6 +4,7 @@ import (
 	internalerrors "campaign-project/internal/internalErrors"
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/render"
 	"gorm.io/gorm"
@@ -22,6 +23,11 @@ func HandlerError(endpointfunc EndpointFunc) http.HandlerFunc {
 				render.Status(r, http.StatusNotFound)
 			} else {
 				render.Status(r, http.StatusBadRequest)
+			}
+
+			if errsList := strings.Split(err.Error(), "\n"); len(errsList) > 0 {
+				render.JSON(w, r, map[string][]string{"error": errsList})
+				return
 			}
 
 			render.JSON(w, r, map[string]string{"error": err.Error()})

@@ -2,6 +2,7 @@ package internalerrors
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -10,27 +11,37 @@ import (
 func ValidateStruct(obj any) error {
 	validate := validator.New()
 
-	err := validate.Struct(obj)	
+	err := validate.Struct(obj)
 
 	if err == nil {
 		return nil
 	}
 
 	validationErrors := err.(validator.ValidationErrors)
-	validationError := validationErrors[0]
 
-	field := strings.ToLower(validationError.StructField())
+	var errRequired, errMin, errMax, errEmail error
 
-	switch validationError.Tag() {
-	case "required":
-		return errors.New(field + " is required")
-	case "min":
-		return errors.New(field + " is required with min " + validationError.Param())
-	case "max":
-		return errors.New(field + " is required with max " + validationError.Param())
-	case "email":
-		return errors.New(field + " is invalid")
+	for _, v := range validationErrors {
+		field := strings.ToLower(v.StructField())
+
+		switch v.Tag() {
+
+		case "required":
+			errRequired = fmt.Errorf("%s is required", field)
+		case "min":
+			errMin = fmt.Errorf("min length for %s is %v", field, v.Param())
+		case "max":
+			errMax = fmt.Errorf("max length for %s is %v", field, v.Param())
+		case "email":
+			errEmail = fmt.Errorf("%s is invalid", field)
+		}
 	}
-	
-	return errors.New(field + " error not mapped")
+
+	if err = errors.Join(errRequired, errMin, errMax, errEmail); err == nil {
+		return errors.New("validation error not mapped")
+	}
+
+	// name is required\nemail is invalid
+
+	return err
 }
