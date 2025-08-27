@@ -18,9 +18,9 @@ func (h *Handler) CampaignPost(w http.ResponseWriter, r *http.Request) (any, int
 	if err != nil {
 		if errors.Is(err, internalerrors.ErrInternalServerError) {
 			return nil, 500, internalerrors.ErrInternalServerError
-		} else {
-			return nil, 400, err
 		}
+
+		return nil, 400, err
 	}
 
 	return map[string]string{"id": id}, 201, nil

@@ -19,7 +19,6 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	r.Use(endpoints.Auth)
 
 	db := database.NewDB()
 	campaignService := campaign.Service{
@@ -31,10 +30,18 @@ func main() {
 		CampaignService: campaignService,
 	}
 
-	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignPost))
-	r.Get("/campaign/{id}", endpoints.HandlerError(handler.CampaignGetByID))
-	r.Get("/campaigns", endpoints.HandlerError(handler.CampaignGet))
-	r.Delete("/campaign/{id}", endpoints.HandlerError(handler.CampaignDelete))
+	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("pong"))
+	})
+
+	r.Route("/campaigns", func(r chi.Router) {
+		r.Use(endpoints.Auth)
+
+		r.Post("/", endpoints.HandlerError(handler.CampaignPost))
+		r.Get("/", endpoints.HandlerError(handler.CampaignGet))
+		r.Get("/{id}", endpoints.HandlerError(handler.CampaignGetByID))
+		r.Delete("/{id}", endpoints.HandlerError(handler.CampaignDelete))
+	})
 
 	fmt.Println("Listening request...")
 	http.ListenAndServe(":3000", r)
